@@ -5,6 +5,7 @@ import {
     create,
     elementalResistance,
     equip,
+    equippedItem,
     handlingChoice,
     inHardcore,
     myHp,
@@ -70,6 +71,7 @@ import {
     outfitSpell,
     outfitWeapon,
 } from "./outfit";
+import { buskFor } from "./beret";
 
 // Prepare for coil wire, i.e. do early run stuff
 export function coilWirePrep(): void {
@@ -345,7 +347,7 @@ export function spellPrep(): number {
     if (get("_dc6s_70", false)) {
         // Obtain 250% spell damage via inefficient means
         // Wish for a 200% buff - wishes turn out cheaper than monkey paw charges
-        if (!have($effect`Sparkly!`)) cliExecute("genie effect sparkly!");
+        if (!have($effect`Sparkly!`)) buskFor($effects`Sparkly!`,true);
         // This leaves 50%, a gap that can be closed via a single battery
         if (!have($effect`AAA-Charged`) && !have($item`battery (AAA)`)) {
             // Manually pull a single battery off the tree
@@ -356,7 +358,15 @@ export function spellPrep(): number {
     } else {
         // Can't do Simmer in a 1/70 as it takes a turn to cast
         // Get it out of the way now so it doesn't muck anything up later
-        getBuffs($effects`Simmering`);
+        if (have($item`April Shower Thoughts Shield`)) {
+            const baseEquip = equippedItem($slot`offhand`);
+            equip($item`April Shower Thoughts Shield`);
+            getBuffs($effects`Simmering`);
+            equip(baseEquip);
+        } else {
+            getBuffs($effects`Simmering`);
+        }
+        
     }
     // Pop a free kill in the toxic teacups for a tiny bit of toxic vengeance
     // Which should be enough to push out a turn save from the spare change
