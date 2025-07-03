@@ -71,7 +71,7 @@ import {
     outfitSpell,
     outfitWeapon,
 } from "./outfit";
-import { buskFor } from "./beret";
+import { buskAt, buskFor } from "./beret";
 
 // Prepare for coil wire, i.e. do early run stuff
 export function coilWirePrep(): void {
@@ -347,7 +347,10 @@ export function spellPrep(): number {
     if (get("_dc6s_70", false)) {
         // Obtain 250% spell damage via inefficient means
         // Wish for a 200% buff - wishes turn out cheaper than monkey paw charges
-        if (!have($effect`Sparkly!`)) buskFor($effects`Sparkly!`,true);
+        if (get("_beretBuskingUses",0) === 0) {
+            buskAt(800, true);
+            buskAt(800, true);
+        }
         // This leaves 50%, a gap that can be closed via a single battery
         if (!have($effect`AAA-Charged`) && !have($item`battery (AAA)`)) {
             // Manually pull a single battery off the tree
